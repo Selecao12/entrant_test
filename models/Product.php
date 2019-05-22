@@ -1,13 +1,15 @@
 <?php
 
-class Product {
+class Product
+{
 
     const SHOW_BY_DEFAULT = 6;
 
     /**
      * Returns an array of products
      */
-    public static function getLatestProducts($count = self::SHOW_BY_DEFAULT) {
+    public static function getLatestProducts($count = self::SHOW_BY_DEFAULT)
+    {
         $count = intval($count);
 
         $db = Db::getConnection();
@@ -15,9 +17,9 @@ class Product {
         $productsList = array();
 
         $result = $db->query("SELECT id, name, price, is_new FROM product "
-                . "WHERE status = '1' "
-                . "ORDER BY id DESC "
-                . "LIMIT " . $count);
+            . "WHERE status = '1' "
+            . "ORDER BY id DESC "
+            . "LIMIT " . $count);
 
         $i = 0;
         while ($row = $result->fetch()) {
@@ -32,7 +34,8 @@ class Product {
         return $productsList;
     }
 
-    public static function getProductListByCategory($categoryId = false, $page = 1) {
+    public static function getProductListByCategory($categoryId = false, $page = 1)
+    {
 
         if ($categoryId) {
 
@@ -41,10 +44,10 @@ class Product {
             $db = Db::getConnection();
             $products = array();
             $result = $db->query("SELECT id, name, price, is_new FROM product "
-                    . "WHERE status = '1' AND category_id = '$categoryId' "
-                    . "ORDER BY id ASC "                
-                    . "LIMIT ".self::SHOW_BY_DEFAULT
-                    . ' OFFSET '. $offset);
+                . "WHERE status = '1' AND category_id = '$categoryId' "
+                . "ORDER BY id ASC "
+                . "LIMIT " . self::SHOW_BY_DEFAULT
+                . ' OFFSET ' . $offset);
 
             $i = 0;
             while ($row = $result->fetch()) {
@@ -59,7 +62,8 @@ class Product {
         }
     }
 
-    public static function getProductById($id) {
+    public static function getProductById($id)
+    {
         $id = intval($id);
 
         if ($id) {
@@ -71,7 +75,7 @@ class Product {
             return $result->fetch();
         }
     }
-    
+
     /**
      * Возвращает список товаров с указанными индентификторами
      * @param array $idsArray <p>Массив с идентификаторами</p>
@@ -106,20 +110,22 @@ class Product {
         return $products;
     }
 
-    public static function getTotalProductsInCategory($categoryId) {
+    public static function getTotalProductsInCategory($categoryId)
+    {
         $db = Db::getConnection();
 
         $result = $db->query("SELECT count(id) AS count FROM product "
-                . "WHERE status='1' AND category_id=$categoryId");
+            . "WHERE status='1' AND category_id=$categoryId");
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
 
         return $row['count'];
     }
-    
-    public static function getSearchedProducts($search) {
+
+    public static function getSearchedProducts($search)
+    {
         $db = Db::getConnection();
-        
+
         $sql = "SELECT * FROM product WHERE status='1' AND name LIKE CONCAT('%', :search, '%')";
 
         $result = $db->prepare($sql);
@@ -137,20 +143,21 @@ class Product {
         }
         return $products;
     }
-    
+
     /*
      * Returns products
      */
-    public static function getProductsByIds($idsArray) {
+    public static function getProductsByIds($idsArray)
+    {
         $products = array();
         $db = Db::getConnection();
         $idsString = implode(',', $idsArray);
-        
+
         $sql = "SELECT * FROM product WHERE status='1' AND id IN ($idsString)";
-        
+
         $result = $db->query($sql);
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        
+
         $i = 0;
         while ($row = $result->fetch()) {
             $products[$i]['id'] = $row['id'];
@@ -159,24 +166,25 @@ class Product {
             $products[$i]['price'] = $row['price'];
             $i++;
         }
-        
+
         return $products;
     }
 
     /**
      * Возвращает список рекомендуемых товаров
      * @return array <p>Массив с товарами</p>
-     */            
-    public static function getRecommendedProducts() {
+     */
+    public static function getRecommendedProducts()
+    {
         $db = Db::getConnection();
-        
+
         $result = $db->query('SELECT id, name, price, is_new FROM product '
-                . 'WHERE status="1" AND is_recommended="1" '
-                . 'ORDER BY id DESC');
+            . 'WHERE status="1" AND is_recommended="1" '
+            . 'ORDER BY id DESC');
 
         $i = 0;
         $productList = array();
-        while($row = $result->fetch()) {
+        while ($row = $result->fetch()) {
             $productList[$i]['id'] = $row['id'];
             $productList[$i]['name'] = $row['name'];
             $productList[$i]['price'] = $row['price'];
@@ -185,7 +193,7 @@ class Product {
         }
         return $productList;
     }
-    
+
     /**
      * Возвращает список товаров
      * @return array <p>Массив с товарами</p>
@@ -208,7 +216,7 @@ class Product {
         }
         return $productsList;
     }
-    
+
     /**
      * Удаляет товар с указанным id
      * @param integer $id <p>id товара</p>
@@ -227,7 +235,7 @@ class Product {
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
-    
+
     /**
      * Добавляет новый товар
      * @param array $options <p>Массив с информацией о товаре</p>
@@ -240,11 +248,11 @@ class Product {
 
         // Текст запроса к БД
         $sql = 'INSERT INTO product '
-                . '(name, code, price, category_id, brand, availability,'
-                . 'description, is_new, is_recommended, status)'
-                . 'VALUES '
-                . '(:name, :code, :price, :category_id, :brand, :availability,'
-                . ':description, :is_new, :is_recommended, :status)';
+            . '(name, code, price, category_id, brand, availability,'
+            . 'description, is_new, is_recommended, status)'
+            . 'VALUES '
+            . '(:name, :code, :price, :category_id, :brand, :availability,'
+            . ':description, :is_new, :is_recommended, :status)';
 
         // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
@@ -265,7 +273,7 @@ class Product {
         // Иначе возвращаем 0
         return 0;
     }
-    
+
     /**
      * Редактирует товар с заданным id
      * @param integer $id <p>id товара</p>
@@ -307,7 +315,7 @@ class Product {
         $result->bindParam(':status', $options['status'], PDO::PARAM_INT);
         return $result->execute();
     }
-    
+
     /**
      * Возвращает путь к изображению
      * @param integer $id
@@ -324,7 +332,7 @@ class Product {
         // Путь к изображению товара
         $pathToProductImage = $path . $id . '.jpg';
 
-        if (file_exists($_SERVER['DOCUMENT_ROOT'].$pathToProductImage)) {
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $pathToProductImage)) {
             // Если изображение для товара существует
             // Возвращаем путь изображения товара
             return $pathToProductImage;
@@ -333,7 +341,7 @@ class Product {
         // Возвращаем путь изображения-пустышки
         return $path . $noImage;
     }
-    
+
     /**
      * Возвращает текстое пояснение наличия товара:<br/>
      * <i>0 - Под заказ, 1 - В наличии</i>

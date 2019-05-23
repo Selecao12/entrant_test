@@ -10,11 +10,7 @@ class ExaminerController
 {
     public function actionIndex() {
 
-        $userId = User::checkLogged();
-        $user = User::getUserById($userId);
-        $userGroup = User::getUserGroup($user['user_group']);
-
-        if ($userGroup['name'] !== 'examiner') {
+        if (User::checkUserGroup('examiner')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -27,10 +23,7 @@ class ExaminerController
     public function actionSendRequest() {
 
         $userId = User::checkLogged();
-        $user = User::getUserById($userId);
-        $userGroup = User::getUserGroup($user['user_group']);
-
-        if ($userGroup['name'] !== 'examiner') {
+        if (User::checkUserGroup('examiner')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }

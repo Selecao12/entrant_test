@@ -106,4 +106,19 @@ class User
             return false;
         }
     }
+
+    /**
+     * Проверяет к нужной ли группе относится пользователя
+     *
+     * @param $userGroup
+     * @return bool
+     */
+    public static function checkUserGroup($userGroup)
+    {
+        $userId = self::checkLogged();
+        $user = self::getUserById($userId);
+
+        return $userGroup == self::getUserGroup($user['user_group']);
+
+    }
 }

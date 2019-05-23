@@ -141,6 +141,24 @@ class Test
     }
 
     /**
+     * Удаляет заявку по id
+     *
+     * @param $requestId
+     * @return bool
+     */
+    public static function deleteRequest($requestId)
+    {
+        $db = Db::getConnection();
+
+        $sql = 'DELETE FROM request WHERE id = :id';
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $requestId, PDO::PARAM_INT);
+
+        return $result->execute();
+    }
+
+    /**
      * Сохраняет тест из заявки в таблицу тестов в БД
      *
      * @param $test
@@ -252,18 +270,22 @@ class Test
     }
 
     /**
-     * Return formatted test for preview
+     * Возвращает тест по id
      *
-     * @param string $uploadedTest
-     * @return mixed formattedTest
+     * @param $testId
+     * @return mixed
      */
-    public static function previewFormattedTest($uploadedTest)
+    public static function getTest($testId)
     {
-        // отформатировать загруженный тест
-        $formattedTest = self::formatTest($uploadedTest);
+        $db = Db::getConnection();
 
-        // представить
-        return $formattedTest;
+        $sql = 'SELECT * FROM test WHERE id = :id';
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $testId, PDO::PARAM_INT);
+        $result->execute();
+
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -301,6 +323,12 @@ class Test
         }
     }
 
+    /**
+     * Сортирует вопросы и ответы теста по алфавиту
+     * 
+     * @param $formattedTest
+     * @return mixed
+     */
     public static function sortFormattedTest($formattedTest)
     {
         $sortedFormattedTest = $formattedTest;
@@ -316,4 +344,22 @@ class Test
 
         return $sortedFormattedTest;
     }
+
+    /**
+     * Получает всемя доступа к тесту для группы пользователей абитуриенты
+     *
+     * @return mixed
+     */
+    public static function getEntrantsAccessTime()
+    {
+        $db = Db::getConnection();
+
+        $sql = "SELECT * FROM user_group WHERE name = 'entrant'";
+
+        $result = $db->query($sql);
+        $accessTime = $result->fetch(PDO::FETCH_ASSOC)['access_time'];
+
+        return $accessTime;
+    }
+    
 }

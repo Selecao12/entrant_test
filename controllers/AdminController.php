@@ -6,14 +6,15 @@
  */
 class AdminController extends AdminBase
 {
+    /**
+     * Кабинет администратора, в котором отображаются заявки от сотрудника приемной комиссии
+     *
+     * @return bool
+     */
     public function actionIndex()
     {
 
-        $userId = User::checkLogged();
-        $user = User::getUserById($userId);
-        $userGroup = User::getUserGroup($user['user_group']);
-
-        if ($userGroup['name'] !== 'admin') {
+        if (User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -25,13 +26,14 @@ class AdminController extends AdminBase
         return true;
     }
 
+    /**
+     * Показывает одну заявку
+     * 
+     * @return bool
+     */
     public static function actionShowRequest()
     {
-        $userId = User::checkLogged();
-        $user = User::getUserById($userId);
-        $userGroup = User::getUserGroup($user['user_group']);
-
-        if ($userGroup['name'] !== 'admin') {
+        if (User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -48,13 +50,15 @@ class AdminController extends AdminBase
         return false;
     }
 
+    /**
+     * Одобрить заявку
+     * 
+     * @return bool
+     */
     public static function actionAcceptRequest()
     {
         $userId = User::checkLogged();
-        $user = User::getUserById($userId);
-        $userGroup = User::getUserGroup($user['user_group']);
-
-        if ($userGroup['name'] !== 'admin') {
+        if (User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -95,5 +99,32 @@ class AdminController extends AdminBase
 
         require_once(ROOT . '/views/admin/failure.php');
         return false;
+    }
+
+    /**
+     * Отклонить заявку
+     *
+     * @return bool
+     */
+    public static function actionDeclineRequest()
+    {
+
+        if (User::checkUserGroup('admin')) {
+            require_once(ROOT . '/views/layouts/access_denied.php');
+            return false;
+        }
+
+        if (isset($_POST['request_id'])) {
+            $requestId = $_POST['request_id'];
+
+            if (Test::deleteRequest($requestId)) {
+                require_once(ROOT . '/views/admin/success.php');
+                return true;
+            }
+        }
+
+        require_once(ROOT . '/views/admin/failure.php');
+        return true;
+
     }
 }

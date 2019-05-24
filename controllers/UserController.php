@@ -2,7 +2,7 @@
 
 class UserController {
 
-    // TODO: Проверить работу метода, добавить описание
+    // TODO: Проверить работу метода, хуй знает почему, но нихуя не работает
     public function actionLogin() {
 
         if (isset($_POST['submit'])) {
@@ -16,6 +16,8 @@ class UserController {
             
             if ($userId == FALSE) {
                 $errors[] = 'Неправильные данные для входа на сайт';
+                require_once (ROOT . '/views/layouts/failure.php');
+                return false;
             } else {
                 // Если данные правильные, запоминаем пользователя (сессия)
                 User::auth($userId);

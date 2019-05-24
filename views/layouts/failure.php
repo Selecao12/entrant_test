@@ -1,5 +1,4 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
-    <p>Ошибка отправки</p>
-<!-- TODO: отредактировать шаблон, как универсальный -->
-    <p><a href="/examiner/cabinet">Назад в кабинет</a></p>
+    <h1>Ошибка</h1>
+    <p><a href="<?= $_SERVER['HTTP_REFERER']; ?>">Назад</a></p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

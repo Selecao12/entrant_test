@@ -4,6 +4,10 @@ return array(
 
     // Кабинет администратора
     'admin' => 'admin/index',
+    'admin/request' => 'admin/showrequest',
+    'admin/acceptrequest' => 'admin/acceptrequest',
+    'admin/declinerequest' => 'admin/declinerequest',
+    'admin/adduser' => 'admin/adduser',
 
     // Кабинет сотрудника приемной комиссии
     'examiner/sendrequest' => 'examiner/sendrequest',
@@ -15,6 +19,7 @@ return array(
 
     // Авторизация
     'login' => 'user/login',
+    'logout' => 'user/logout',
 
     // Главная страница
     'index.php' => 'site/index', // actionIndex в SiteController

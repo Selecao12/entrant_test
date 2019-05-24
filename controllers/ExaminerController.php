@@ -11,7 +11,7 @@ class ExaminerController
     // TODO: Проверить работу метода, добавить описание
     public function actionIndex() {
 
-        if (User::checkUserGroup('examiner')) {
+        if (!User::checkUserGroup('examiner')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -24,7 +24,7 @@ class ExaminerController
     public function actionSendRequest() {
 
         $userId = User::checkLogged();
-        if (User::checkUserGroup('examiner')) {
+        if (!User::checkUserGroup('examiner')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -39,7 +39,7 @@ class ExaminerController
             $formattedTest = Test::formatTest($uploadedTest);
 
             if ($formattedTest === false) {
-                require_once(ROOT . '/views/examiner/failure.php');
+                require_once(ROOT . '/views/layouts/failure.php');
                 return false;
             }
 
@@ -47,16 +47,16 @@ class ExaminerController
             $sortedTest = Test::sortFormattedTest($formattedTest);
 
             // Сохранить тест в заявках
-            if (Test::saveRequest($userId, $sortedTest, $description, $testId)) {
-                require_once(ROOT . '/views/examiner/success.php');
+            if (Request::saveRequest($userId, $sortedTest, $description, $testId)) {
+                require_once(ROOT . '/views/layouts/success.php');
                 return true;
             } else {
-                require_once(ROOT . '/views/examiner/failure.php');
+                require_once(ROOT . '/views/layouts/failure.php');
                 return false;
             }
         }
 
-        require_once(ROOT . '/views/examiner/failure.php');
+        require_once(ROOT . '/views/layouts/failure.php');
         return false;
     }
 }

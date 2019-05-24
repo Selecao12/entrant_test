@@ -1,5 +1,8 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
     <h1>Кабинет администратора безопасности</h1>
+    <div>
+        <p><a href="/admin/adduser/">Добавить пользователя</a></p>
+    </div>
     <table>
         <caption>Заявки</caption>
         <tr>

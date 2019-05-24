@@ -98,12 +98,12 @@ class User
     {
         $userId = self::checkLogged();
 
-        if ($userId == 0) {
+        if ($userId === 0) {
             return false;
         }
         $user = self::getUserById($userId);
 
-        return $userGroup == self::getUserGroup($user['user_group']);
+        return $userGroup == self::getUserGroup($user['user_group'])['name'];
 
     }
 

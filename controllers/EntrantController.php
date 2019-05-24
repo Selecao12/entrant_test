@@ -12,10 +12,12 @@ class EntrantController
     // TODO: Проверить работу метода, добавить описание
     public static function actionIndex()
     {
-        if (User::checkUserGroup('entrant')) {
+        if (!User::checkUserGroup('entrant')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
+
+        $tests = Test::getTests();
 
         require_once(ROOT. '/views/entrant/cabinet.php');
         return true;
@@ -24,7 +26,7 @@ class EntrantController
     // TODO: Проверить работу метода, добавить описание
     public static function actionTest()
     {
-        if (User::checkUserGroup('entrant')) {
+        if (!User::checkUserGroup('entrant')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }

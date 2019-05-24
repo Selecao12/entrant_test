@@ -14,12 +14,12 @@ class AdminController extends AdminBase
     public function actionIndex()
     {
 
-        if (User::checkUserGroup('admin')) {
+        if (!User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
 
-        $requests = Test::getRequests();
+        $requests = Request::getRequests();
 
         require_once(ROOT . '/views/admin/cabinet.php');
 
@@ -33,14 +33,14 @@ class AdminController extends AdminBase
      */
     public static function actionShowRequest()
     {
-        if (User::checkUserGroup('admin')) {
+        if (!User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
 
         if (isset($_POST['request_id'])) {
             $requestId = $_POST['request_id'];
-            $request = Test::getRequest($requestId);
+            $request = Request::getRequest($requestId);
 
             require_once(ROOT . '/views/admin/request.php');
             return true;
@@ -58,14 +58,14 @@ class AdminController extends AdminBase
     public static function actionAcceptRequest()
     {
         $userId = User::checkLogged();
-        if (User::checkUserGroup('admin')) {
+        if (!User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
 
         if (isset($_POST['request_id'])) {
             $requestId = $_POST['request_id'];
-            $request = Test::getRequest($requestId);
+            $request = Request::getRequest($requestId);
 
             if ($request['test_id'] == 0) {
                 $testId = Test::saveTest($request['test'], $request['description'], $request['user_id'], $userId);
@@ -73,12 +73,12 @@ class AdminController extends AdminBase
                 if ($testId) {
                     $testHashId = Test::saveTestHash($request['test'], $testId);
                     if ($testHashId) {
-                        require_once(ROOT . '/views/admin/success.php');
+                        require_once(ROOT . '/views/layouts/success.php');
                         return true;
                     }
                 }
 
-                require_once(ROOT . '/views/admin/failure.php');
+                require_once(ROOT . '/views/layouts/failure.php');
                 return false;
             }
 
@@ -87,17 +87,17 @@ class AdminController extends AdminBase
                 if ($testId) {
                     $testHashId = Test::updateTestHash($request['test_id'], $request['test']);
                     if ($testHashId) {
-                        require_once(ROOT . '/views/admin/success.php');
+                        require_once(ROOT . '/views/layouts/success.php');
                         return true;
                     }
                 }
 
-                require_once(ROOT . '/views/admin/failure.php');
+                require_once(ROOT . '/views/layouts/failure.php');
                 return false;
             }
         }
 
-        require_once(ROOT . '/views/admin/failure.php');
+        require_once(ROOT . '/views/layouts/failure.php');
         return false;
     }
 
@@ -109,7 +109,7 @@ class AdminController extends AdminBase
     public static function actionDeclineRequest()
     {
 
-        if (User::checkUserGroup('admin')) {
+        if (!User::checkUserGroup('admin')) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }
@@ -117,20 +117,55 @@ class AdminController extends AdminBase
         if (isset($_POST['request_id'])) {
             $requestId = $_POST['request_id'];
 
-            if (Test::deleteRequest($requestId)) {
-                require_once(ROOT . '/views/admin/success.php');
+            if (Request::deleteRequest($requestId)) {
+                require_once(ROOT . '/views/layouts/success.php');
                 return true;
             }
         }
 
-        require_once(ROOT . '/views/admin/failure.php');
+        require_once(ROOT . '/views/layouts/failure.php');
         return true;
 
     }
 
-    // TODO: Добавить функцию добавления нового пользователя и описание
+    /**
+     * Добавить нового пользователя
+     *
+     * @return bool
+     */
     public static function actionAddUser()
     {
 
+        if (!User::checkUserGroup('admin')) {
+            require_once(ROOT . '/views/layouts/access_denied.php');
+            return false;
+        }
+
+        if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['user_group'])) {
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+            $userGroup = $_POST['user_group'];
+
+            if (User::addUser($login, $password, $userGroup)) {
+                require_once(ROOT . '/views/layouts/success.php');
+                return true;
+            } else {
+                require_once(ROOT . '/views/layouts/failure.php');
+                return false;
+            }
+        }
+
+        require_once(ROOT . '/views/admin/adduser.php');
+        return true;
     }
+
+    // TODO: Написать метод
+    /**
+     * Установить время доступа для студентов
+     */
+    public static function actionSetAccessTime()
+    {
+
+    }
+
 }

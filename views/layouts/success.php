@@ -1,6 +1,4 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
-    <!-- TODO: отредактировать шаблон, как универсальный -->
-
-    <p>Заявка отправленаю</p>
-    <p><a href="/examiner/cabinet">Назад в кабинет</a></p>
+    <h1>Успешно</h1>
+    <p><a href="<?= $_SERVER['HTTP_REFERER']; ?>">Назад</a></p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

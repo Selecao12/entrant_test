@@ -9,6 +9,7 @@
 class EntrantController
 {
 
+    // TODO: Проверить работу метода, добавить описание
     public static function actionIndex()
     {
         if (User::checkUserGroup('entrant')) {
@@ -17,10 +18,10 @@ class EntrantController
         }
 
         require_once(ROOT. '/views/entrant/cabinet.php');
-
         return true;
     }
 
+    // TODO: Проверить работу метода, добавить описание
     public static function actionTest()
     {
         if (User::checkUserGroup('entrant')) {

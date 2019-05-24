@@ -1,5 +1,6 @@
 <?php include ROOT . '/views/layouts/header.php'; ?>
 <p>
-    Доступ запрещен.
+    <!-- TODO: отредактировать шаблон, как универсальный -->
+
 </p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

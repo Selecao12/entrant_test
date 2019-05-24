@@ -8,6 +8,7 @@
 
 class ExaminerController
 {
+    // TODO: Проверить работу метода, добавить описание
     public function actionIndex() {
 
         if (User::checkUserGroup('examiner')) {
@@ -16,10 +17,10 @@ class ExaminerController
         }
 
         require_once(ROOT. '/views/examiner/cabinet.php');
-
         return true;
     }
 
+    // TODO: Проверить работу метода, добавить описание
     public function actionSendRequest() {
 
         $userId = User::checkLogged();

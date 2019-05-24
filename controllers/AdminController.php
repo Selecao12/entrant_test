@@ -127,4 +127,10 @@ class AdminController extends AdminBase
         return true;
 
     }
+
+    // TODO: Добавить функцию добавления нового пользователя и описание
+    public static function actionAddUser()
+    {
+
+    }
 }

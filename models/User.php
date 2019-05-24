@@ -3,21 +3,28 @@
 class User
 {
 
-    public static function register($name, $email, $password)
+    /**
+     * Добавляет пользователя в базу данных
+     *
+     * @param $login
+     * @param $password
+     * @param $userGroup
+     * @return bool
+     */
+    public static function addUser($login, $password, $userGroup)
     {
+        $password = password_hash($password, PASSWORD_DEFAULT);
 
         $db = Db::getConnection();
 
-        $sql = 'INSERT INTO user (name, email, password) '
-            . 'VALUES (:name, :email, :password)';
+        $sql = 'INSERT INTO user(login, password, user_group) VALUES (:login, :password, :user_group)';
 
         $result = $db->prepare($sql);
-        $result->bindParam(':name', $name, PDO::PARAM_STR);
-        $result->bindParam(':email', $email, PDO::PARAM_STR);
+        $result->bindParam(':login', $login, PDO::PARAM_STR);
         $result->bindParam(':password', $password, PDO::PARAM_STR);
+        $result->bindParam(':user_group', $userGroup, PDO::PARAM_INT);
 
         return $result->execute();
-
     }
 
     /**
@@ -29,6 +36,11 @@ class User
         $_SESSION['user'] = $userId;
     }
 
+    /**
+     * Проверяет залогинен ли пользователь
+     *
+     * @return mixed
+     */
     public static function checkLogged()
     {
         // Если сессия есть, вернет идентификатор пользователя
@@ -36,11 +48,11 @@ class User
             return $_SESSION['user'];
         }
 
-        header("Location: /user/login");
+        return 0;
     }
 
     /**
-     * Returns user by id
+     * Возвращает пользователя по id
      * @param integer $id
      *
      * @return array
@@ -76,37 +88,6 @@ class User
         return $result->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function isGuest()
-    {
-        if (isset($_SESSION['user'])) {
-            return false;
-        }
-        return true;
-    }
-
-    public static function isAdmin()
-    {
-        if (self::isGuest()) {
-            return false;
-        }
-
-        $userId = self::checkLogged();
-        $user = self::getUserById($userId);
-
-        if ($user['role'] == 'admin') {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function isExaminer()
-    {
-        if (self::isGuest()) {
-            return false;
-        }
-    }
-
     /**
      * Проверяет к нужной ли группе относится пользователя
      *
@@ -116,9 +97,36 @@ class User
     public static function checkUserGroup($userGroup)
     {
         $userId = self::checkLogged();
+
+        if ($userId == 0) {
+            return false;
+        }
         $user = self::getUserById($userId);
 
         return $userGroup == self::getUserGroup($user['user_group']);
 
+    }
+
+    public static function checkUserData($login, $password)
+    {
+        $db = Db::getConnection();
+
+        $sql = 'SELECT * FROM user WHERE login = :login';
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':login', $login, PDO::PARAM_STR);
+        $result->execute();
+
+        $user = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $passwordHash = $user['password'];
+
+            if (password_verify($password, $passwordHash)) {
+                return $user['id'];
+            }
+        }
+
+        return false;
     }
 }

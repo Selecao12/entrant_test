@@ -8,7 +8,11 @@
 
 class ExaminerController
 {
-    // TODO: Проверить работу метода, добавить описание
+    /**
+     * Показывает кабинет сотрудника приемной комиссии
+     *
+     * @return bool
+     */
     public function actionIndex() {
 
         if (!User::checkUserGroup('examiner')) {
@@ -20,7 +24,11 @@ class ExaminerController
         return true;
     }
 
-    // TODO: Проверить работу метода, добавить описание
+    /**
+     * Отправляет запрос на добавление теста
+     *
+     * @return bool
+     */
     public function actionSendRequest() {
 
         $userId = User::checkLogged();

@@ -107,6 +107,13 @@ class User
 
     }
 
+    /**
+     * Проверяет логин и пароль пользователя
+     *
+     * @param $login
+     * @param $password
+     * @return bool
+     */
     public static function checkUserData($login, $password)
     {
         $db = Db::getConnection();
@@ -128,5 +135,23 @@ class User
         }
 
         return false;
+    }
+
+    /**
+     * Обновляет время доступа к тесту для группы пользователей "абитуриенты"
+     *
+     * @param $accessTime
+     * @return bool
+     */
+    public static function setAccessTime($accessTime)
+    {
+        $db = Db::getConnection();
+
+        $sql = 'UPDATE user_group SET access_time = :access_time WHERE id = 3';
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':access_time', $accessTime, PDO::PARAM_INT);
+
+        return $result->execute();
     }
 }

@@ -11,22 +11,5 @@
                 </a>
             </div>
         </div>
-        <div>
-            <pre>
-            <?php
-            $user = User::getUserById(3);
-            var_dump($user);
-            ?>
-            </pre>
-        </div
-        <div>
-            <?php
-            if (User::checkUserGroup('admin')) {
-                echo 'Success';
-            } else {
-                echo 'FUUUUU!';
-            }
-            ?>
-        </div>
     </div>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

@@ -9,5 +9,6 @@
         <textarea name="description" id="" cols="50" rows="10"></textarea>
         <input type="submit">
     </form>
+    <p><a href="/">На главную</a></p>
 </div>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

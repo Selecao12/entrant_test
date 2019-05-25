@@ -2,7 +2,6 @@
 
 class UserController {
 
-    // TODO: Проверить работу метода, хуй знает почему, но нихуя не работает
     public function actionLogin() {
 
         if (isset($_POST['submit'])) {

@@ -73,20 +73,9 @@ class AdminController extends AdminBase
                 if ($testId) {
                     $testHashId = Test::saveTestHash($request['test'], $testId);
                     if ($testHashId) {
-                        require_once(ROOT . '/views/layouts/success.php');
-                        return true;
-                    }
-                }
 
-                require_once(ROOT . '/views/layouts/failure.php');
-                return false;
-            }
+                        Request::deleteRequest($requestId);
 
-            if ($request['test_id'] != 0) {
-                $testId = Test::updateTest($request['test_id'], $request['test'], $request['description'], $request['user_id'], $userId);
-                if ($testId) {
-                    $testHashId = Test::updateTestHash($request['test_id'], $request['test']);
-                    if ($testHashId) {
                         require_once(ROOT . '/views/layouts/success.php');
                         return true;
                     }
@@ -159,13 +148,55 @@ class AdminController extends AdminBase
         return true;
     }
 
-    // TODO: Написать метод
     /**
      * Установить время доступа для студентов
      */
     public static function actionSetAccessTime()
     {
 
+        if (!User::checkUserGroup('admin')) {
+            require_once(ROOT . '/views/layouts/access_denied.php');
+            return false;
+        }
+
+        if (isset($_POST['submit'])) {
+            $accessTime = strtotime($_POST['access_time']);
+            if (User::setAccessTime($accessTime)) {
+                require_once(ROOT . '/views/layouts/success.php');
+                return true;
+            } else {
+                require_once(ROOT . '/views/layouts/failure.php');
+                return false;
+            }
+        }
+
+        $currentAccessTime = Test::getEntrantsAccessTime();
+        require_once(ROOT . '/views/admin/accesstime.php');
+        return true;
     }
+
+    /**
+     * Показать тесты и проверить хеш
+     *
+     * @return bool
+     */
+    public static function actionTests()
+    {
+        if (!User::checkUserGroup('admin')) {
+            require_once(ROOT . '/views/layouts/access_denied.php');
+            return false;
+        }
+
+        $tests = Test::getTests();
+
+        for($i = 0; $i < count($tests); $i++) {
+            $tests[$i]['valid'] = Test::checkHash($tests[$i]['id']);
+        }
+
+        require_once (ROOT . '/views/admin/tests.php');
+        return true;
+    }
+
+    // TODO: удаление существующих тестов?
 
 }

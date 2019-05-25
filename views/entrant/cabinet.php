@@ -10,13 +10,13 @@
             <tr>
                 <td><?= $test['description']; ?></td>
                 <td>
-                    <form action="/entrant/test/">
+                    <form action="/entrant/test/" method="post">
                         <input type="hidden" name="test_id" value="<?= $test['id']; ?>">
-                        <input type="submit">
+                        <input type="submit" value="Открыть">
                     </form>
                 </td>
             </tr>
         <?php endforeach; ?>
     </table>
-
+    <p><a href="/">На главную</a></p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

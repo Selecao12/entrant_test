@@ -99,62 +99,6 @@ class Test
     }
 
     /**
-     * Обновляет запись в таблице тестов
-     *
-     * @param $testId
-     * @param $test
-     * @param $description
-     * @param $userId
-     * @param $adminId
-     * @return int|string
-     */
-    public static function updateTest($testId, $test, $description, $userId, $adminId)
-    {
-        $db = Db::getConnection();
-
-        $sql = 'UPDATE test SET test = :test, description = :description, user_id = :user_id, admin_id = :admin_id WHERE id = :id';
-
-        $result = $db->prepare($sql);
-        $result->bindParam(':test', $test, PDO::PARAM_STR);
-        $result->bindParam(':description', $description, PDO::PARAM_STR);
-        $result->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $result->bindParam(':admin_id', $adminId, PDO::PARAM_INT);
-        $result->bindParam(':id', $testId, PDO::PARAM_INT);
-
-        if ($result->execute()) {
-            return $db->lastInsertId();
-        }
-
-        return 0;
-    }
-
-    /**
-     * Обновляет хеш теста в таблице тестов
-     *
-     * @param $testId
-     * @param $test
-     * @return int|string
-     */
-    public static function updateTestHash($testId, $test)
-    {
-        $testHash = sha1($test);
-
-        $db = Db::getConnection();
-
-        $sql = 'UPDATE test_hash SET hash = :test_hash WHERE test_id = :test_id';
-
-        $result = $db->prepare($sql);
-        $result->bindParam(':test_hash', $testHash, PDO::PARAM_STR);
-        $result->bindParam(':test_id', $testId, PDO::PARAM_INT);
-
-        if ($result->execute()) {
-            return $db->lastInsertId();
-        }
-
-        return 0;
-    }
-
-    /**
      * Сохраняет хеш теста
      *
      * @param $test

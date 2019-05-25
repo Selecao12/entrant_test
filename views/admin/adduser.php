@@ -20,4 +20,5 @@
             <input type="submit">
         </p>
     </form>
+    <p><a href="/admin/">В кабинет администратора</a></p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

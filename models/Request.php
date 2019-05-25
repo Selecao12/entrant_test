@@ -26,8 +26,8 @@ class Request
         // Соединение с БД
         $db = Db::getConnection();
 
-        $sql = 'INSERT INTO request (user_id, test, description, time)'
-            . 'VALUES (:user_id, :test, :description, NOW())';
+        $sql = 'INSERT INTO request (user_id, test, description, test_id, time)'
+            . 'VALUES (:user_id, :test, :description, :test_id, NOW())';
 
         $result = $db->prepare($sql);
         $result->bindParam(':user_id', $userId, PDO::PARAM_INT);

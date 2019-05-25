@@ -9,7 +9,10 @@
 class EntrantController
 {
 
-    // TODO: Проверить работу метода, добавить описание
+    /**
+     * Отображает кабинет абитуриента
+     * @return bool
+     */
     public static function actionIndex()
     {
         if (!User::checkUserGroup('entrant')) {
@@ -23,7 +26,11 @@ class EntrantController
         return true;
     }
 
-    // TODO: Проверить работу метода, добавить описание
+    /**
+     * Отображает тест
+     *
+     * @return bool
+     */
     public static function actionTest()
     {
         if (!User::checkUserGroup('entrant')) {
@@ -31,7 +38,7 @@ class EntrantController
             return false;
         }
 
-        if (time() > Test::getEntrantsAccessTime()) {
+        if (time() < Test::getEntrantsAccessTime()) {
             require_once(ROOT . '/views/layouts/access_denied.php');
             return false;
         }

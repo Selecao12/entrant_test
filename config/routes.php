@@ -3,11 +3,13 @@
 return array(
 
     // Кабинет администратора
-    'admin' => 'admin/index',
     'admin/request' => 'admin/showrequest',
     'admin/acceptrequest' => 'admin/acceptrequest',
     'admin/declinerequest' => 'admin/declinerequest',
     'admin/adduser' => 'admin/adduser',
+    'admin/accesstime' => 'admin/setaccesstime',
+    'admin/tests' => 'admin/tests',
+    'admin' => 'admin/index',
 
     // Кабинет сотрудника приемной комиссии
     'examiner/sendrequest' => 'examiner/sendrequest',

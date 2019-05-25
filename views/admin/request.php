@@ -26,6 +26,7 @@
                 </form>
             </td>
         </tr>
-
     </table>
+
+    <p><a href="/admin/">В кабинет администратора</a></p>
 <?php include ROOT . '/views/layouts/footer.php'; ?>

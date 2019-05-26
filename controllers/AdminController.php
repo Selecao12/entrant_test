@@ -28,7 +28,7 @@ class AdminController extends AdminBase
 
     /**
      * Показывает одну заявку
-     * 
+     *
      * @return bool
      */
     public static function actionShowRequest()
@@ -52,7 +52,7 @@ class AdminController extends AdminBase
 
     /**
      * Одобрить заявку
-     * 
+     *
      * @return bool
      */
     public static function actionAcceptRequest()
@@ -63,27 +63,26 @@ class AdminController extends AdminBase
             return false;
         }
 
-        if (isset($_POST['request_id'])) {
+        if (isset($_POST['request_id']) && isset($_POST['salt'])) {
             $requestId = $_POST['request_id'];
             $request = Request::getRequest($requestId);
 
-            if ($request['test_id'] == 0) {
-                $testId = Test::saveTest($request['test'], $request['description'], $request['user_id'], $userId);
+            $testId = Test::saveTest($request['test'], $request['description'], $request['user_id'], $userId);
 
-                if ($testId) {
-                    $testHashId = Test::saveTestHash($request['test'], $testId);
-                    if ($testHashId) {
+            if ($testId) {
+                $salt = $_POST['salt'];
+                $testHashId = Test::saveTestHash($request['test'], $testId, $salt);
+                if ($testHashId) {
 
-                        Request::deleteRequest($requestId);
+                    Request::deleteRequest($requestId);
 
-                        require_once(ROOT . '/views/layouts/success.php');
-                        return true;
-                    }
+                    require_once(ROOT . '/views/layouts/success.php');
+                    return true;
                 }
-
-                require_once(ROOT . '/views/layouts/failure.php');
-                return false;
             }
+
+            require_once(ROOT . '/views/layouts/failure.php');
+            return false;
         }
 
         require_once(ROOT . '/views/layouts/failure.php');
@@ -189,14 +188,23 @@ class AdminController extends AdminBase
 
         $tests = Test::getTests();
 
-        for($i = 0; $i < count($tests); $i++) {
-            $tests[$i]['valid'] = Test::checkHash($tests[$i]['id']);
-        }
-
-        require_once (ROOT . '/views/admin/tests.php');
+        require_once(ROOT . '/views/admin/tests.php');
         return true;
     }
 
-    // TODO: удаление существующих тестов?
+    public static function actionCheckHash()
+    {
+        if (isset($_POST['test_id']) && isset($_POST['salt'])) {
+            $testId = $_POST['test_id'];
+            $salt = $_POST['salt'];
+            $result = Test::checkHash($testId, $salt);
+
+            if ($result) {
+                echo 'OK';
+            } else {
+                echo 'FAIL';
+            }
+        }
+    }
 
 }

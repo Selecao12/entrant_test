@@ -9,6 +9,7 @@ return array(
     'admin/adduser' => 'admin/adduser',
     'admin/accesstime' => 'admin/setaccesstime',
     'admin/tests' => 'admin/tests',
+    'admin/checkhash' => 'admin/checkhash',
     'admin' => 'admin/index',
 
     // Кабинет сотрудника приемной комиссии

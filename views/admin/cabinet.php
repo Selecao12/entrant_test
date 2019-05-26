@@ -27,6 +27,7 @@
                 <td>
                     <form action="/admin/acceptrequest/" method="post">
                         <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                        Соль: <input type="text" name="salt">
                         <input type="submit" value="Принять">
                     </form>
                 </td>

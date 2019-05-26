@@ -105,9 +105,9 @@ class Test
      * @param $testId
      * @return int|string
      */
-    public static function saveTestHash($test, $testId)
+    public static function saveTestHash($test, $testId, $salt)
     {
-        $testHash = sha1($test);
+        $testHash = sha1($test . $salt);
 
         $db = Db::getConnection();
 
@@ -165,7 +165,7 @@ class Test
      * @param $testId
      * @return bool
      */
-    public static function checkHash($testId)
+    public static function checkHash($testId, $salt)
     {
         $db = Db::getConnection();
 
@@ -187,7 +187,7 @@ class Test
 
         $testHash = $result->fetch(PDO::FETCH_ASSOC)['hash'];
 
-        if (sha1($test) == $testHash) {
+        if (sha1($test . $salt) == $testHash) {
             return true;
         } else {
             return false;
